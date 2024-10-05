@@ -2,8 +2,8 @@ import pefile
 from capstone import *
 
 def disas_code(file_path):
+    # disassemble instructions in .text section
     pe = pefile.PE(file_path)
-
     text_section = None
     """Retrieve the .text section from the PE file."""
     for section in pe.sections:
@@ -21,9 +21,6 @@ def disas_code(file_path):
     entrypoint = pe.OPTIONAL_HEADER.AddressOfEntryPoint
     entrypoint_address = entrypoint + pe.OPTIONAL_HEADER.ImageBase
     binary_code = pe.get_memory_mapped_image()[text_va:text_va+text_size]
-
-
-
     disassembler = Cs(CS_ARCH_X86, CS_MODE_32)
 
     for insn in disassembler.disasm(binary_code, entrypoint_address):
